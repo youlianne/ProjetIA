@@ -1,5 +1,5 @@
-from .id3 import ID3
-from .traitement import traitement_donnees
+from id3 import ID3
+from traitement import traitement_donnees
 
 class ResultValues():
 
