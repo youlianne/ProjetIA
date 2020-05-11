@@ -6,7 +6,7 @@ class ResultValues():
     def __init__(self):
 
         # Do computations here
-        import_donnee(self,"../Data/train_bin.csv")
+        traitement_donnees.import_donnee(self,"../Data/train_bin.csv")
         # Task 1
         self.arbre = None
         # Task 3
