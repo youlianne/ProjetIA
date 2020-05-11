@@ -6,7 +6,10 @@ class ResultValues():
     def __init__(self):
 
         # Do computations here
-        import_donnee(self,"../Data/train_bin.csv")
+        donnee_train = import_donnee("../Data/train_bin.csv")
+        arbre_recursif = construit_arbre_recur(donnee_train)
+        print(arbre_recursif)
+        print('hello')
         # Task 1
         self.arbre = None
         # Task 3
