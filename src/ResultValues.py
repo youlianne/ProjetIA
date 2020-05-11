@@ -4,12 +4,12 @@ from traitement import traitement_donnees
 class ResultValues():
 
     def __init__(self):
-
+        id3 = ID3()
         # Do computations here
-        donnee_train = import_donnee("../Data/train_bin.csv")
-        arbre_recursif = construit_arbre_recur(donnee_train)
-        print(arbre_recursif)
-        print('hello')
+        donnee_train = traitement_donnees.import_donnee(self,"../Data/train_bin.csv")
+        
+        arbre = id3.construit_arbre(donnee_train)
+        print(arbre)
         # Task 1
         self.arbre = None
         # Task 3
