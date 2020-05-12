@@ -7,11 +7,19 @@ class ResultValues():
         id3 = ID3()
         # Do computations here
         donnee_train = traitement_donnees.import_donnee(self,"../Data/train_bin.csv")
-        
-        arbre = id3.construit_arbre(donnee_train)
-        print(arbre)
+        donnee_test = traitement_donnees.import_donnee_test(self,"../Data/test_public_bin.csv")
         # Task 1
-        self.arbre = None
+        self.arbre = id3.construit_arbre(donnee_train)
+        #print(self.arbre)
+        n = 0
+        p = 0
+        for donnee in donnee_test :
+            model_result = self.arbre.classifie(donnee)
+            if model_result[-1] == donnee['target']:
+                p = p+1
+            n = n+1
+        print("Precision : ")
+        print(p/n)
         # Task 3
         self.faits_initiaux = None
         self.regles = None
