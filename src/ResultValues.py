@@ -11,6 +11,7 @@ class ResultValues():
         # Task 1
         self.arbre = id3.construit_arbre(donnee_train)
         #print(self.arbre)
+        print(self.arbre.generation_regle())
         n = 0
         p = 0
         for donnee in donnee_test :
