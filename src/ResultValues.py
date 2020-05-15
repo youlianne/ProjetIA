@@ -10,7 +10,7 @@ class ResultValues():
         donnee_test = traitement_donnees.import_donnee_test(self,"../Data/test_public_bin.csv")
         # Task 1
         self.arbre = id3.construit_arbre(donnee_train)
-        print(self.arbre)
+        #print(self.arbre)
 
         n = 0
         p = 0
@@ -24,7 +24,13 @@ class ResultValues():
         # Task 3
         self.faits_initiaux = None
         self.regles = self.arbre.generation_regle()
-        print(self.regles)
+            # Affichage des règles
+        r = 0
+        for regle in self.regles:
+            r += 1
+            print(str(r) + ') ' + self.arbre.ecrit_regle(regle))
+            # Justification d'un exemple à l'aide des règles
+        print(self.arbre.justifie_exemple(donnee_test[0], self.regles))
         # Task 5
         self.arbre_advance = None
 

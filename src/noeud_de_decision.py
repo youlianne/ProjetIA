@@ -104,3 +104,28 @@ class NoeudDeDecision:
                 chem.append((self.attribut, valeur))
                 regles+=enfant.generation_regle(chem)
             return regles
+
+    
+    def ecrit_regle(self, sequence):
+        regle = ''
+        for element in sequence :
+            if element[0] != 'target':
+                regle = regle + 'Si ' + element[0] + ' = ' + element[1] + ', '
+            else :
+                regle = regle + 'Alors ' + element[1] + '.'
+        return regle
+
+
+    def justifie_exemple(self, exemple, regles):
+        resultat = self.classifie(exemple)
+        r = 0
+        print('Classification : ' + resultat)
+        for regle in regles:
+            r += 1
+            verif = 0
+            for param in regle :
+                if exemple[param[0]] == param[1]:
+                    verif += 1
+            if verif == len(regle):
+                return 'Le resultat est ' + resultat[-1] + ' car : ' + self.ecrit_regle(regle) + ' (regle numero ' + str(r) + ')'
+        return 'Aucune justification trouvee...'
