@@ -88,18 +88,19 @@ class NoeudDeDecision:
 
 
 
-    def generation_regle(self):
+    def generation_regle(self, chemin=[]):
         """ Generation des regles sous forme de string """
-
-        regle = []
-
-        rep = ''
         if self.terminal():
-            rep += 'Alors {}\n'.format(self.classe().upper())
+            regle = []
+            chemin.append(('target',self.classe()))
+            regle.append(chemin)
+            return regle
+
 
         else:
+            regles = []
             for valeur, enfant in self.enfants.items():
-                rep += '{} = {}\n'.format(self.attribut, valeur.upper())
-                rep += enfant.generation_regle()
-
-        return rep
+                chem = chemin.copy()
+                chem.append((self.attribut, valeur))
+                regles+=enfant.generation_regle(chem)
+            return regles

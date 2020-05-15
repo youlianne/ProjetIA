@@ -10,8 +10,8 @@ class ResultValues():
         donnee_test = traitement_donnees.import_donnee_test(self,"../Data/test_public_bin.csv")
         # Task 1
         self.arbre = id3.construit_arbre(donnee_train)
-        #print(self.arbre)
-        print(self.arbre.generation_regle())
+        print(self.arbre)
+
         n = 0
         p = 0
         for donnee in donnee_test :
@@ -23,7 +23,8 @@ class ResultValues():
         print(p/n)
         # Task 3
         self.faits_initiaux = None
-        self.regles = None
+        self.regles = self.arbre.generation_regle()
+        print(self.regles)
         # Task 5
         self.arbre_advance = None
 
