@@ -30,7 +30,8 @@ class ResultValues():
             r += 1
             print(str(r) + ') ' + self.arbre.ecrit_regle(regle))
             # Justification d'un exemple à l'aide des règles
-        print(self.arbre.justifie_exemple(donnee_test[50], self.regles))
+        #for ex in donnee_test:
+        print(self.arbre.justifie_exemple(donnee_test[2], self.regles))
         # Task 5
         self.arbre_advance = None
 

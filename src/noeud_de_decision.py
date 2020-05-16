@@ -124,8 +124,11 @@ class NoeudDeDecision:
             r += 1
             verif = 0
             for param in regle :
-                if exemple[param[0]] == param[1]:
+                if exemple[param[0]] == param[1] and param[0] != 'target':
                     verif += 1
-            if verif == len(regle):
-                return 'Le resultat est ' + resultat[-1] + ' car : ' + self.ecrit_regle(regle) + ' (regle numero ' + str(r) + ')'
+            if verif == len(regle)-1:
+                if exemple['target'] == resultat[-1]:
+                    return 'Le resultat est ' + resultat[-1] + ' car : ' + self.ecrit_regle(regle) + ' (regle numero ' + str(r) + ')'
+                else :
+                    return 'D\'apres la regle numero ' + str(r) + ' ('+ self.ecrit_regle(regle) + '), le patient est classifie ' + resultat[-1] + ' mais son etat reel est ' + str(exemple['target'])+'.'
         return 'Aucune justification trouvee...'
