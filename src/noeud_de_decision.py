@@ -105,7 +105,7 @@ class NoeudDeDecision:
                 regles+=enfant.generation_regle(chem)
             return regles
 
-    
+
     def ecrit_regle(self, sequence):
         regle = ''
         for element in sequence :
