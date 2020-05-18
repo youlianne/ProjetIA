@@ -30,8 +30,15 @@ class ResultValues():
             r += 1
             print(str(r) + ') ' + self.arbre.ecrit_regle(regle))
             # Justification d'un exemple à l'aide des règles
-        #for ex in donnee_test:
-        print(self.arbre.justifie_exemple(donnee_test[2], self.regles))
+        conflict = 0
+        n_ex = 0
+        for ex in donnee_test:
+            c = []
+            justification  = self.arbre.justifie_exemple(ex, self.regles, c)
+            #print(justification)
+            conflict += len(c)
+            n_ex += 1
+        print('Taux de succes des justifications : ' + str(1 - conflict/n_ex))
         # Task 5
         self.arbre_advance = None
 

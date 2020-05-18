@@ -116,10 +116,10 @@ class NoeudDeDecision:
         return regle
 
 
-    def justifie_exemple(self, exemple, regles):
+    def justifie_exemple(self, exemple, regles, conflict = []):
         resultat = self.classifie(exemple)
         r = 0
-        print('Classification : ' + resultat)
+        #print('Classification : ' + resultat)
         for regle in regles:
             r += 1
             verif = 0
@@ -130,5 +130,6 @@ class NoeudDeDecision:
                 if exemple['target'] == resultat[-1]:
                     return 'Le resultat est ' + resultat[-1] + ' car : ' + self.ecrit_regle(regle) + ' (regle numero ' + str(r) + ')'
                 else :
+                    conflict.append(1)
                     return 'D\'apres la regle numero ' + str(r) + ' ('+ self.ecrit_regle(regle) + '), le patient est classifie ' + resultat[-1] + ' mais son etat reel est ' + str(exemple['target'])+'.'
         return 'Aucune justification trouvee...'
