@@ -22,25 +22,30 @@ class ResultValues():
         print("Precision : ")
         print(p/n)
         # Task 3
-        self.faits_initiaux = None
+        self.faits_initiaux = donnee_train 
         self.regles = self.arbre.generation_regle()
             # Affichage des règles
         r = 0
         for regle in self.regles:
             r += 1
-            print(str(r) + ') ' + self.arbre.ecrit_regle(regle))
+            #print(str(r) + ') ' + self.arbre.ecrit_regle(regle))
             # Justification d'un exemple à l'aide des règles
-        conflict = 0
+        conflict = []
         n_ex = 0
         for ex in donnee_test:
-            c = []
-            justification  = self.arbre.justifie_exemple(ex, self.regles, c)
+            justification  = self.arbre.justifie_exemple(ex, self.regles, conflict)
             #print(justification)
-            conflict += len(c)
             n_ex += 1
-        print('Taux de succes des justifications : ' + str(1 - conflict/n_ex))
+        print('Taux de succes des justifications : ' + str(1 - len(conflict)/n_ex))
+        d=[]
+        for patient in donnee_test:
+            self.arbre.diagnostic(self.regles,patient, d)
+        print ('On a pu aider ' + str(len(d)) + ' patients en changeant 2 parametres au maximum.')
         # Task 5
-        self.arbre_advance = None
+        donnee_train_continue = traitement_donnees.import_donnee(self,"../Data/train_continuous.csv")
+        donnee_test_continue = traitement_donnees.import_donnee_test(self,"../Data/test_public_continuous.csv")
+        self.arbre_advance = id3.construit_arbre(donnee_train_continue)
+        print(self.arbre_advance)
 
     def get_results(self):
         return [self.arbre, self.faits_initiaux, self.regles, self.arbre_advance]
