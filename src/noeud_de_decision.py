@@ -118,7 +118,6 @@ class NoeudDeDecision:
     def justifie_exemple(self, exemple, regles, conflict = []):
         resultat = self.classifie(exemple)
         r = 0
-        #print('Classification : ' + resultat)
         for regle in regles:
             r += 1
             verif = 0

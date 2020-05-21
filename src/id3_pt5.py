@@ -29,17 +29,13 @@ class ID3_PT5:
                     valeurs = set()
                     attributs[attribut] = valeurs
                 valeurs.add(valeur)
-
         # Find the predominant class
         classes = set([row[0] for row in donnees])
-        # print(classes)
         predominant_class_counter = -1
         for c in classes:
-            # print([row[0] for row in donnees].count(c))
             if [row[0] for row in donnees].count(c) >= predominant_class_counter:
                 predominant_class_counter = [row[0] for row in donnees].count(c)
                 predominant_class = c
-        # print(predominant_class)
         for patient in donnees:
             patient[1]['etiquette']='1';
         arbre = self.construit_arbre_recur(donnees, attributs, predominant_class)
@@ -60,7 +56,7 @@ class ID3_PT5:
         def classe_unique(donnees):
             """ Vérifie que toutes les données appartiennent à la même classe. """
 
-            if len(donnees) == 0:
+            if len(donnees) <=1:
                 return True
             premiere_classe = donnees[0][0]
             for donnee in donnees:
@@ -79,7 +75,8 @@ class ID3_PT5:
         else:
             # Sélectionne l'attribut qui réduit au maximum l'entropie.
             split = self.trouve_split(donnees,attributs)
-
+            n1=0
+            n2=0
             for patient in donnees:
                 if patient[1][split[0]] < split[1]:
                     patient[1]['etiquette']='1'
@@ -90,6 +87,14 @@ class ID3_PT5:
 
             enfants = {}
             for valeur, partition in partitions.items():
+                attributs = {}
+                for donnee in partition:
+                    for attribut, valeur in donnee[1].items():
+                        valeurs = attributs.get(attribut)
+                        if valeurs is None:
+                            valeurs = set()
+                            attributs[attribut] = valeurs
+                        valeurs.add(valeur)
                 enfants[valeur] = self.construit_arbre_recur(partition,
                                                              attributs,
                                                              predominant_class,level+1)
@@ -124,7 +129,7 @@ class ID3_PT5:
         """
         # Nombre de données.
         nombre_donnees = len(donnees)
-    
+
         # Permet d'éviter les divisions par 0.
         if nombre_donnees == 0:
             return 0.0
@@ -132,7 +137,6 @@ class ID3_PT5:
         # Nombre d'occurrences de la valeur a_j parmi les données.
         nombre_aj = 0
         for donnee in donnees:
-            #print('etiquette ' +  ' ET valeur ' + valeur)
             if donnee[1][attribut] == valeur:
                 nombre_aj += 1
         # p(a_j) = nombre d'occurrences de la valeur a_j parmi les données /
@@ -205,7 +209,7 @@ class ID3_PT5:
 
         return sum([p_aj * h_c_aj for p_aj, h_c_aj in zip(p_ajs, h_c_ajs)])
 
-    def trouve_split(self,donnees, attributs):
+    def trouve_split(self, donnees, attributs):
         entropie_min = 1
         paire = ('','')
         for attribut in attributs:
@@ -216,7 +220,7 @@ class ID3_PT5:
                     else :
                         patient[1]['etiquette'] = '2'
                 entropie = self.h_C_A(donnees)
-                if entropie < entropie_min:
+                if entropie <= entropie_min:
                     entropie_min= entropie
                     paire= (attribut,valeur)
         return paire

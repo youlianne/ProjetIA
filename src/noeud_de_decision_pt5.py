@@ -78,7 +78,6 @@ class NoeudDeDecision_PT5:
         else:
             for valeur, enfant in self.enfants.items():
                 rep += '---'*level
-                print(valeur)
                 if valeur == '1':
                     rep += 'Si {} < {}: \n'.format(self.attribut[0], self.attribut[1].upper())
                 else:
@@ -126,7 +125,6 @@ class NoeudDeDecision_PT5:
     def justifie_exemple(self, exemple, regles, conflict = []):
         resultat = self.classifie(exemple)
         r = 0
-        #print('Classification : ' + resultat)
         for regle in regles:
             r += 1
             verif = 0
