@@ -1,4 +1,5 @@
 from id3 import ID3
+from id3_pt5 import ID3_PT5
 from traitement import traitement_donnees
 
 class ResultValues():
@@ -22,7 +23,7 @@ class ResultValues():
         print("Precision : ")
         print(p/n)
         # Task 3
-        self.faits_initiaux = donnee_train 
+        self.faits_initiaux = donnee_train
         self.regles = self.arbre.generation_regle()
             # Affichage des règles
         r = 0
@@ -42,9 +43,10 @@ class ResultValues():
             self.arbre.diagnostic(self.regles,patient, d)
         print ('On a pu aider ' + str(len(d)) + ' patients en changeant 2 parametres au maximum.')
         # Task 5
+        id3_pt5= ID3_PT5()
         donnee_train_continue = traitement_donnees.import_donnee(self,"../Data/train_continuous.csv")
         donnee_test_continue = traitement_donnees.import_donnee_test(self,"../Data/test_public_continuous.csv")
-        self.arbre_advance = id3.construit_arbre(donnee_train_continue)
+        self.arbre_advance = id3_pt5.construit_arbre(donnee_train_continue)
         print(self.arbre_advance)
 
     def get_results(self):

@@ -1,7 +1,7 @@
 from math import log
 from noeud_de_decision import NoeudDeDecision
 
-class ID3:
+class ID3_PT5:
     """ Algorithme ID3.
 
         This is an updated version from the one in the book (Intelligence Artificielle par la pratique).
@@ -40,12 +40,12 @@ class ID3:
                 predominant_class_counter = [row[0] for row in donnees].count(c)
                 predominant_class = c
         # print(predominant_class)
-
+        for patient in donnees:
+            patient[1]['etiquette']='1';
         arbre = self.construit_arbre_recur(donnees, attributs, predominant_class)
-
         return arbre
 
-    def construit_arbre_recur(self, donnees, attributs, predominant_class):
+    def construit_arbre_recur(self, donnees, attributs, predominant_class,level=0):
         """ Construit rédurcivement un arbre de décision à partir
             des données d'apprentissage et d'un dictionnaire liant
             les attributs à la liste de leurs valeurs possibles.
@@ -57,7 +57,7 @@ class ID3:
             :return: une instance de NoeudDeDecision correspondant à la racine de\
             l'arbre de décision.
         """
-
+        print(len(donnees))
         def classe_unique(donnees):
             """ Vérifie que toutes les données appartiennent à la même classe. """
 
@@ -74,31 +74,30 @@ class ID3:
 
         # Si toutes les données restantes font partie de la même classe,
         # on peut retourner un noeud terminal.
-        elif classe_unique(donnees):
+        elif classe_unique(donnees) or level>=10:
             return NoeudDeDecision(None, donnees, str(predominant_class))
 
         else:
             # Sélectionne l'attribut qui réduit au maximum l'entropie.
-            h_C_As_attribs = [(self.h_C_A(donnees, attribut, attributs[attribut]),
-                               attribut) for attribut in attributs]
+            split = self.trouve_split(donnees,attributs)
 
-            attribut = min(h_C_As_attribs, key=lambda h_a: h_a[0])[1]
+            for patient in donnees:
+                if patient[1][split[0]] < split[1]:
+                    patient[1]['etiquette']='1'
+                else:
+                    patient[1]['etiquette']='2'
 
-            # Crée les sous-arbres de manière récursive.
-            attributs_restants = attributs.copy()
-            del attributs_restants[attribut]
-
-            partitions = self.partitionne(donnees, attribut, attributs[attribut])
+            partitions = self.partitionne(donnees)
 
             enfants = {}
             for valeur, partition in partitions.items():
                 enfants[valeur] = self.construit_arbre_recur(partition,
-                                                             attributs_restants,
-                                                             predominant_class)
+                                                             attributs,
+                                                             predominant_class,level+1)
 
-            return NoeudDeDecision(attribut, donnees, str(predominant_class), enfants)
+            return NoeudDeDecision(split, donnees, str(predominant_class), enfants)
 
-    def partitionne(self, donnees, attribut, valeurs):
+    def partitionne(self, donnees, attribut='etiquette', valeurs=['1','2']):
         """ Partitionne les données sur les valeurs a_j de l'attribut A.
 
             :param list donnees: les données à partitioner.
@@ -190,7 +189,7 @@ class ID3:
                     for p_ci_aj in p_ci_ajs
                     if p_ci_aj != 0])
 
-    def h_C_A(self, donnees, attribut, valeurs):
+    def h_C_A(self, donnees, attribut='etiquette', valeurs = ['1','2']):
         """ H(C|A) - l'entropie de la classe après avoir choisi de partitionner\
             les données suivant les valeurs de l'attribut A.
 
@@ -207,3 +206,19 @@ class ID3:
                    for valeur in valeurs]
 
         return sum([p_aj * h_c_aj for p_aj, h_c_aj in zip(p_ajs, h_c_ajs)])
+
+    def trouve_split(self,donnees, attributs):
+        entropie_min = 1
+        paire = ('','')
+        for attribut in attributs:
+            for valeur in attributs[attribut]:
+                for patient in donnees:
+                    if float(patient[1][attribut]) < float(valeur) :
+                        patient[1]['etiquette'] = 1
+                    else :
+                        patient[1]['etiquette'] = 2
+                entropie = self.h_C_A(donnees)
+                if entropie < entropie_min:
+                    entropie_min= entropie
+                    paire= (attribut,valeur)
+        return paire

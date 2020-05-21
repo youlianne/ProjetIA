@@ -7,7 +7,7 @@ class NoeudDeDecision:
 
     def __init__(self, attribut, donnees, p_class, enfants=None):
         """
-            :param attribut: l'attribut de partitionnement du noeud (``None`` si\
+            :param attribut: l'attribut de partitionnement du noeud et sa valeur de partitionnement sous forme de tuple (``None`` si\
             le noeud est un noeud terminal).
             :param list donnees: la liste des données qui tombent dans la\
             sous-classification du noeud.
@@ -47,9 +47,12 @@ class NoeudDeDecision:
         if self.terminal():
             rep += 'Alors {}'.format(self.classe().upper())
         else:
-            valeur = donnee[self.attribut]
-            enfant = self.enfants[valeur]
-            rep += 'Si {} = {}, '.format(self.attribut, valeur.upper())
+            valeur = self.attribut[1]
+            if donnee[self.attribut[0]] < valeur:
+                enfant = self.enfants[0]
+                rep += 'Si {} < {}, '.format(self.attribut[0], valeur.upper())
+            else:
+                rep += 'Si {} >= {}, '.format(self.attribut[0], valeur.upper())
             try:
                 rep += enfant.classifie(donnee)
             except:
@@ -74,7 +77,7 @@ class NoeudDeDecision:
         else:
             for valeur, enfant in self.enfants.items():
                 rep += '---'*level
-                rep += 'Si {} = {}: \n'.format(self.attribut, valeur.upper())
+                rep += 'Si {} = {}: \n'.format(self.attribut[0], valeur.upper())
                 rep += enfant.repr_arbre(level+1)
 
         return rep
@@ -100,7 +103,7 @@ class NoeudDeDecision:
             regles = []
             for valeur, enfant in self.enfants.items():
                 chem = chemin.copy()
-                chem.append((self.attribut, valeur))
+                chem.append((self.attribut[0], valeur))
                 regles+=enfant.generation_regle(chem)
             return regles
 
