@@ -48,6 +48,19 @@ class ResultValues():
         donnee_test_continue = traitement_donnees.import_donnee_test(self,"../Data/test_public_continuous.csv")
         self.arbre_advance = id3_pt5.construit_arbre(donnee_train_continue)
         print(self.arbre_advance)
+        
+        #print(self.arbre_advance.classifie(donnee_test_continue[0]))
+        
+        n = 0
+        p = 0
+        for donnee in donnee_test_continue :
+            print(donnee['thalach'])
+            model_result = self.arbre_advance.classifie(donnee)
+            if model_result[-1] == donnee['target']:
+                p = p+1
+            n = n+1
+        print("Precision : ")
+        print(p/n)
 
     def get_results(self):
         return [self.arbre, self.faits_initiaux, self.regles, self.arbre_advance]

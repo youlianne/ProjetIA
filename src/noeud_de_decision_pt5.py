@@ -1,4 +1,4 @@
-class NoeudDeDecision:
+class NoeudDeDecision_PT5:
     """ Un noeud dans un arbre de décision.
 
         This is an updated version from the one in the book (Intelligence Artificielle par la pratique).
@@ -49,9 +49,10 @@ class NoeudDeDecision:
         else:
             valeur = self.attribut[1]
             if donnee[self.attribut[0]] < valeur:
-                enfant = self.enfants[0]
+                enfant = self.enfants['1']
                 rep += 'Si {} < {}, '.format(self.attribut[0], valeur.upper())
             else:
+                enfant = self.enfants['2']
                 rep += 'Si {} >= {}, '.format(self.attribut[0], valeur.upper())
             try:
                 rep += enfant.classifie(donnee)
@@ -68,16 +69,20 @@ class NoeudDeDecision:
         if self.terminal():
             rep += '---'*level
             rep += 'Alors {}\n'.format(self.classe().upper())
-            rep += '---'*level
+            """rep += '---'*level
             rep += 'Décision basée sur les données:\n'
             for donnee in self.donnees:
                 rep += '---'*level
-                rep += str(donnee) + '\n'
+                rep += str(donnee) + '\n'"""
 
         else:
             for valeur, enfant in self.enfants.items():
                 rep += '---'*level
-                rep += 'Si {} = {}: \n'.format(self.attribut[0], valeur.upper())
+                print(valeur)
+                if valeur == '1':
+                    rep += 'Si {} < {}: \n'.format(self.attribut[0], self.attribut[1].upper())
+                else:
+                    rep += 'Si {} >= {}: \n'.format(self.attribut[0], self.attribut[1].upper())
                 rep += enfant.repr_arbre(level+1)
 
         return rep

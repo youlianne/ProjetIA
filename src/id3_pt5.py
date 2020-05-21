@@ -1,5 +1,5 @@
 from math import log
-from noeud_de_decision import NoeudDeDecision
+from noeud_de_decision_pt5 import NoeudDeDecision_PT5
 
 class ID3_PT5:
     """ Algorithme ID3.
@@ -57,7 +57,6 @@ class ID3_PT5:
             :return: une instance de NoeudDeDecision correspondant à la racine de\
             l'arbre de décision.
         """
-        print(len(donnees))
         def classe_unique(donnees):
             """ Vérifie que toutes les données appartiennent à la même classe. """
 
@@ -70,12 +69,12 @@ class ID3_PT5:
             return True
 
         if donnees == []:
-            return NoeudDeDecision(None, [str(predominant_class), dict()], str(predominant_class))
+            return NoeudDeDecision_PT5(None, [str(predominant_class), dict()], str(predominant_class))
 
         # Si toutes les données restantes font partie de la même classe,
         # on peut retourner un noeud terminal.
         elif classe_unique(donnees) or level>=10:
-            return NoeudDeDecision(None, donnees, str(predominant_class))
+            return NoeudDeDecision_PT5(None, donnees, str(predominant_class))
 
         else:
             # Sélectionne l'attribut qui réduit au maximum l'entropie.
@@ -95,7 +94,7 @@ class ID3_PT5:
                                                              attributs,
                                                              predominant_class,level+1)
 
-            return NoeudDeDecision(split, donnees, str(predominant_class), enfants)
+            return NoeudDeDecision_PT5(split, donnees, str(predominant_class), enfants)
 
     def partitionne(self, donnees, attribut='etiquette', valeurs=['1','2']):
         """ Partitionne les données sur les valeurs a_j de l'attribut A.
@@ -125,7 +124,7 @@ class ID3_PT5:
         """
         # Nombre de données.
         nombre_donnees = len(donnees)
-
+    
         # Permet d'éviter les divisions par 0.
         if nombre_donnees == 0:
             return 0.0
@@ -133,9 +132,9 @@ class ID3_PT5:
         # Nombre d'occurrences de la valeur a_j parmi les données.
         nombre_aj = 0
         for donnee in donnees:
+            #print('etiquette ' +  ' ET valeur ' + valeur)
             if donnee[1][attribut] == valeur:
                 nombre_aj += 1
-
         # p(a_j) = nombre d'occurrences de la valeur a_j parmi les données /
         #          nombre de données.
         return nombre_aj / nombre_donnees
@@ -200,7 +199,6 @@ class ID3_PT5:
         """
         # Calcule P(a_j) pour chaque valeur a_j de l'attribut A.
         p_ajs = [self.p_aj(donnees, attribut, valeur) for valeur in valeurs]
-
         # Calcule H_C_aj pour chaque valeur a_j de l'attribut A.
         h_c_ajs = [self.h_C_aj(donnees, attribut, valeur)
                    for valeur in valeurs]
@@ -214,9 +212,9 @@ class ID3_PT5:
             for valeur in attributs[attribut]:
                 for patient in donnees:
                     if float(patient[1][attribut]) < float(valeur) :
-                        patient[1]['etiquette'] = 1
+                        patient[1]['etiquette'] = '1'
                     else :
-                        patient[1]['etiquette'] = 2
+                        patient[1]['etiquette'] = '2'
                 entropie = self.h_C_A(donnees)
                 if entropie < entropie_min:
                     entropie_min= entropie
