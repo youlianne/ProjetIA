@@ -36,6 +36,7 @@ class ID3_PT5:
             if [row[0] for row in donnees].count(c) >= predominant_class_counter:
                 predominant_class_counter = [row[0] for row in donnees].count(c)
                 predominant_class = c
+        # Set default tags (1 or 2) for each training point. The tags will be useful for classification.
         for patient in donnees:
             patient[1]['etiquette']='1';
         arbre = self.construit_arbre_recur(donnees, attributs, predominant_class)
@@ -69,15 +70,13 @@ class ID3_PT5:
 
         # Si toutes les données restantes font partie de la même classe,
         # on peut retourner un noeud terminal.
-        elif classe_unique(donnees) or level>=10:
+        elif classe_unique(donnees) or level>=10: # Also set a maximal depth 
             return NoeudDeDecision_PT5(None, donnees, str(predominant_class))
 
-        else:
-            # Sélectionne l'attribut qui réduit au maximum l'entropie.
+        else: #Continue
+            # Find the attribute and value with minimal entropy
             split = self.trouve_split(donnees,attributs)
-            n1=0
-            n2=0
-            for patient in donnees:
+            for patient in donnees: #Set tags to the training points according to the splitting attribute and value
                 if patient[1][split[0]] < split[1]:
                     patient[1]['etiquette']='1'
                 else:
@@ -87,7 +86,7 @@ class ID3_PT5:
 
             enfants = {}
             for valeur, partition in partitions.items():
-                attributs = {}
+                attributs = {} #Same set of attributes but we remove the values tha are not relevant in each side of the node
                 for donnee in partition:
                     for attribut, valeur in donnee[1].items():
                         valeurs = attributs.get(attribut)
@@ -210,6 +209,8 @@ class ID3_PT5:
         return sum([p_aj * h_c_aj for p_aj, h_c_aj in zip(p_ajs, h_c_ajs)])
 
     def trouve_split(self, donnees, attributs):
+        """ Returns a tuple containing the pair of attribute and value which reduce the entropy the most
+        """
         entropie_min = 1
         paire = ('','')
         for attribut in attributs:

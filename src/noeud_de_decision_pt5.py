@@ -78,7 +78,7 @@ class NoeudDeDecision_PT5:
         else:
             for valeur, enfant in self.enfants.items():
                 rep += '---'*level
-                if valeur == '1':
+                if valeur == '1': #If tag is 1, the data goes to the "left" of the node
                     rep += 'Si {} < {}: \n'.format(self.attribut[0], self.attribut[1].upper())
                 else:
                     rep += 'Si {} >= {}: \n'.format(self.attribut[0], self.attribut[1].upper())
@@ -93,64 +93,3 @@ class NoeudDeDecision_PT5:
 
         return str(self.repr_arbre(level=0))
 
-
-    def generation_regle(self, chemin=[]):
-        """ Generation des regles sous forme de string """
-        if self.terminal():
-            regle = []
-            chemin.append(('target',self.classe()))
-            regle.append(chemin)
-            return regle
-
-
-        else:
-            regles = []
-            for valeur, enfant in self.enfants.items():
-                chem = chemin.copy()
-                chem.append((self.attribut[0], valeur))
-                regles+=enfant.generation_regle(chem)
-            return regles
-
-
-    def ecrit_regle(self, sequence):
-        regle = ''
-        for element in sequence :
-            if element[0] != 'target':
-                regle = regle + 'Si ' + element[0] + ' = ' + element[1] + ', '
-            else :
-                regle = regle + 'Alors ' + element[1] + '.'
-        return regle
-
-
-    def justifie_exemple(self, exemple, regles, conflict = []):
-        resultat = self.classifie(exemple)
-        r = 0
-        for regle in regles:
-            r += 1
-            verif = 0
-            for param in regle :
-                if exemple[param[0]] == param[1] and param[0] != 'target':
-                    verif += 1
-            if verif == len(regle)-1:
-                if exemple['target'] == resultat[-1]:
-                    return 'Le resultat est ' + resultat[-1] + ' car : ' + self.ecrit_regle(regle) + ' (regle numero ' + str(r) + ')'
-                else :
-                    conflict.append(1)
-                    return 'D\'apres la regle numero ' + str(r) + ' ('+ self.ecrit_regle(regle) + '), le patient est classifie ' + resultat[-1] + ' mais son etat reel est ' + str(exemple['target'])+'.'
-        return 'Aucune justification trouvee...'
-
-    def diagnostic(self,regles,patient, diag =[]):
-        if self.classifie(patient)[-1] == '0':
-            return 'le patient n\'est pas malade donc on ne fait pas de diagnostic'
-        for regle in regles:
-            diff = 0
-            if regle[-1][1]=='0':
-                stock= 'si l\'on modifie '
-                for param in regle:
-                    if patient[param[0]]!= param[1] and param[0]!='target' and param[0]!='sex' and param[0]!='age':
-                        diff +=1
-                        stock += param[0].upper() + ' a ' + str(param[1]).upper() + ' , '
-                if diff <= 2:
-                    diag.append(1)
-                    return  stock + 'alors le patient sera classifie comme 0' + ' d\'apres la regle ' + self.ecrit_regle(regle)
-        return 'diagnostic impossible car il y a trop d\'attributs a changer'
